@@ -16,7 +16,7 @@ func main() {
 	}
 
 	config.Load(cfgPath)
-	fmt.Springf("cfg Path: %c", cfgPath)
+	fmt.Printf("cfg Path: %v", cfgPath)
 
 	app := fiber.New()
 
