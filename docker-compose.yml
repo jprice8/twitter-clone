@@ -6,7 +6,7 @@ services:
       context: .
       dockerfile: Dockerfile
     env_file:
-      - .env
+      - .env.docker
     depends_on:
       - db
     container_name: twitter-api
@@ -23,7 +23,7 @@ services:
     image: postgres:13-alpine
     restart: always 
     env_file:
-      - .env
+      - .env.docker
     ports:
       - 5433:5432
       - 8080:8080
