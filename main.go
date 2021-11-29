@@ -45,7 +45,7 @@ func main() {
 	}
 	defer conn.Close(context.Background())
 
-	var greeting string 
+	var greeting string
 	err = conn.QueryRow(context.Background(), "select 'Hello, world!'").Scan(&greeting)
 	if err != nil {
 		log.Fatalf("QueryRow failed: %v\n", err)
