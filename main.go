@@ -7,13 +7,15 @@ import (
 	"os"
 
 	// "log"
+	"github.com/jprice8/twitter-clone/internal/shared/database"
 
 	"github.com/gofiber/fiber/v2"
-	"github.com/jackc/pgx/v4"
 	"github.com/joho/godotenv"
 )
 
 func main() {
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
 
 	// Import .env file to environment
 	err := godotenv.Load()
@@ -30,14 +32,14 @@ func main() {
 		os.Getenv("POSTGRES_DB"),
 	)
 
-	conn, err := pgx.Connect(context.Background(), dbUrl)
+	// Create db
+	db, err := database.New(ctx, dbUrl)
 	if err != nil {
-		log.Fatalf("Failed to init db.", err)
+		log.Fatal(err)
 	}
-	defer conn.Close(context.Background())
 
 	var greeting string
-	err = conn.QueryRow(context.Background(), "select 'Hello, world!'").Scan(&greeting)
+	err = db.QueryRow("select 'Hello, world!'").Scan(&greeting)
 	if err != nil {
 		log.Fatalf("QueryRow failed: %v\n", err)
 	}
