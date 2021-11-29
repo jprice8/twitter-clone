@@ -11,7 +11,7 @@ RUN go mod download
 # Copy the source code. The wildcard is used to copy all files with a .go
 # extension located in the current directory to the current directory inside
 # the image.
-COPY *.go ./
+COPY . ./
 
 # Build a static application binary named twitter-clone located in root of
 # our image. Could put anywhere in image, this is easiest.
