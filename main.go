@@ -52,5 +52,9 @@ func main() {
 		return c.SendString("Hello, World!")
 	})
 
+	app.Get("/users", func(c *fiber.Ctx) error {
+		return c.SendString("Users go here")
+	})
+
 	app.Listen(":8080")
 }
