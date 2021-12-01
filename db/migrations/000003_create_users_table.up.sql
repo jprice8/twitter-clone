@@ -4,7 +4,7 @@ CREATE TABLE IF NOT EXISTS "users" (
     "name" varchar(255) NULL,
     "email" varchar(255) NULL,
     "password" varchar(255) NULL,
-    "created_at" timestamp(0) without time zone NOT NULL
+    "created_at" timestamp default current_timestamp
 );
 ALTER TABLE "users"
     ADD PRIMARY KEY ("id");

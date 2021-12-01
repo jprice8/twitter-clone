@@ -1,6 +1,7 @@
 package config
 
 import (
+	"fmt"
 	"os"
 	"path/filepath"
 
@@ -30,4 +31,14 @@ func lookup(key string, fallback string) string {
 
 func GetString(key string, fallback string) string {
 	return lookup(key, fallback)
+}
+
+// Config func to get env value
+func Config(key string) string {
+	// load .env file
+	err := godotenv.Load(".env")
+	if err != nil {
+		fmt.Print("Error loading .env file")
+	}
+	return os.Getenv(key)
 }
