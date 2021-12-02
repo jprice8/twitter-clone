@@ -32,4 +32,5 @@ func (s *Server) initRouteGroups() {
 	router.UserRoutes(api.Group("/user"), s.db)
 	router.ProductRoutes(api.Group("/product"), s.db)
 	router.CategoryRoutes(api.Group("/category"), s.db)
+	router.OrderRoutes(api.Group("/order"), s.db)
 }

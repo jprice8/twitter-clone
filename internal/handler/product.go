@@ -46,10 +46,24 @@ func GetAllProducts(db database.Database) fiber.Handler {
 	}
 }
 
+// Get product by ID
+func GetProductById(db database.Database) fiber.Handler {
+	return func(c *fiber.Ctx) error {
+		// Get product ID from url param
+		productId := c.Params("productId")
+		// Select products from db using product ID
+		var product model.Product
+		row := db.QueryRow("SELECT * FROM products WHERE id = $1", productId)
+		if err := row.Scan(&product.ID, &product.Name, &product.Description, &product.Price, &product.CreatedAt); err != nil {
+			return c.Status(500).JSON(fiber.Map{"status": "error", "message": "Query failed on productById", "data": err})
+		}
+		return c.JSON(fiber.Map{"status": "success", "message": "Successfully returned product by ID", "data": product})
+	}
+}
+
 // Get products by category
 func GetProductsByCategory(db database.Database) fiber.Handler {
 	return func(c *fiber.Ctx) error {
-
 		categoryId := c.Params("categoryId")
 		// Select products by category id
 		rows, err := db.Query(`
