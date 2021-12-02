@@ -21,6 +21,11 @@ services:
     volumes:
       - ./:/app
 
+  web:
+    build:
+      context: ./web
+      dockerfile: build/web/Dockerfile
+
   db:
     image: postgres:13-alpine
     restart: always 

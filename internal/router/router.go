@@ -54,7 +54,7 @@ func CategoryRoutes(r fiber.Router, db database.Database) {
 	r.Post("/", handler.CreateCategory(db))
 }
 
-// Orders
+// Order
 func OrderRoutes(r fiber.Router, db database.Database) {
 	// Get orders by User /:userId (PROTECTED)
 	r.Get("/user/:userId", middleware.Protected(), handler.GetOrdersByUser(db))
