@@ -32,7 +32,21 @@ func UserRoutes(r fiber.Router, db database.Database) {
 
 // Product
 func ProductRoutes(r fiber.Router, db database.Database) {
-	// TODO product routes
 	// Get all products
-	// Get product
+	r.Get("/", handler.GetAllProducts(db))
+	// Get product by categories
+	r.Get("/category/:categoryId", handler.GetProductsByCategory(db))
+	// Lookahead for autocomplete search
+	r.Get("/lookAhead/:prefix", handler.LookAhead(db))
+
+	// Create new product
+	r.Post("/", handler.CreateProduct(db))
+	// Categorize a product
+	r.Post("/categorize/:productId/:categoryId", handler.CategorizeProduct(db))
+}
+
+// Category
+func CategoryRoutes(r fiber.Router, db database.Database) {
+	// Create new category
+	r.Post("/", handler.CreateCategory(db))
 }
