@@ -1,6 +1,7 @@
 package server
 
 import (
+	"github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/jprice8/twitter-clone/internal/router"
 	"github.com/jprice8/twitter-clone/internal/shared/database"
 	"github.com/jprice8/twitter-clone/internal/shared/webserver"
@@ -25,8 +26,9 @@ func (s *Server) Listen() {
 }
 
 func (s *Server) initRouteGroups() {
-	// router.authRouter(s.webserver.Engine().Group("/auth"), s.db)
-	router.ApiRoutes(s.webserver.Engine().Group("/api"), s.db)
-	router.AuthRoutes(s.webserver.Engine().Group("/auth"), s.db)
-	router.UserRoutes(s.webserver.Engine().Group("/user"), s.db)
+	api := s.webserver.Engine().Group("/api", logger.New())
+	router.ApiRoutes(api.Group("/"), s.db)
+	router.AuthRoutes(api.Group("/auth"), s.db)
+	router.UserRoutes(api.Group("/user"), s.db)
+	router.ProductRoutes(api.Group("/product"), s.db)
 }

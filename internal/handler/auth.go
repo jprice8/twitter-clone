@@ -47,8 +47,11 @@ func Login(db database.Database) fiber.Handler {
 		}
 
 		if !CheckPasswordHash(pass, user.Password) {
-			return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"status": "error", "message": "Invalid password", "data": nil})
+			return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"status": "error", "message": "Invalid password", "pass": pass, "hash": user.Password})
 		}
+		// if pass != user.Password {
+			// return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"status": "error", "message": "Invalid password", "pass": pass, "hash": user.Password})
+		// }
 
 		token := jwt.New(jwt.SigningMethodHS256)
 

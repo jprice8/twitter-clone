@@ -2,7 +2,7 @@ package model
 
 import "time"
 
-// // User struct
+// User struct
 type User struct {
 	ID        int64    `json:"id"`
 	Name      string    `json:"name"`
@@ -11,7 +11,7 @@ type User struct {
 	CreatedAt time.Time `json:"created_at"`
 }
 
-// // Users struct
+// Users struct
 type Users struct {
 	Users []User `json:"users"`
 }

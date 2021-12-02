@@ -1,0 +1,5 @@
+BEGIN;
+ALTER TABLE IF EXISTS orders
+    DROP CONSTRAINT IF EXISTS "orders_user_id_foreign";
+DROP TABLE IF EXISTS orders;
+COMMIT;

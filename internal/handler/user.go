@@ -1,31 +1,19 @@
 package handler
 
 import (
-	// "strconv"
+	"log"
+	"time"
 
-	// "github.com/dgrijalva/jwt-go"
 	"github.com/gofiber/fiber/v2"
 	"github.com/jprice8/twitter-clone/internal/model"
 	"github.com/jprice8/twitter-clone/internal/shared/database"
-	// "golang.org/x/crypto/bcrypt"
+	"golang.org/x/crypto/bcrypt"
 )
 
-// func hashPassword(password string) (string, error) {
-// 	bytes, err := bcrypt.GenerateFromPassword([]byte(password), 14)
-// 	return string(bytes), err
-// }
-
-// func validToken(t *jwt.Token, id string) bool {
-// 	n, err := strconv.Atoi(id)
-// 	if err != nil {
-// 		return false
-// 	}
-
-// 	claims := t.Claims.(jwt.MapClaims)
-// 	uid := int(claims["user_id"].(float64))
-
-// 	return uid == n
-// }
+func hashPassword(password string) (string, error) {
+	bytes, err := bcrypt.GenerateFromPassword([]byte(password), 14)
+	return string(bytes), err
+}
 
 // Fetch all users
 func FetchUsers(db database.Database) fiber.Handler {
@@ -63,5 +51,55 @@ func GetUser(db database.Database) fiber.Handler {
 			return err // Exit if error
 		}
 		return c.JSON(fiber.Map{"status": "success", "message": "User Found", "data": user})
+	}
+}
+
+// Create new user
+func CreateUser(db database.Database) fiber.Handler {
+	return func(c *fiber.Ctx) error {
+		type NewUser struct {
+			Name  string `json:"name"`
+			Email string `json:"email"`
+		}
+
+		user := new(model.User)
+		if err := c.BodyParser(user); err != nil {
+			return c.Status(500).JSON(fiber.Map{"status": "error", "message": "Missing or invalid fields", "data": err})
+		}
+
+		hash, err := hashPassword(user.Password)
+		if err != nil {
+			return c.Status(500).JSON(fiber.Map{"status": "error", "message": "Couldn't hash password", "data": err})
+		}
+
+		user.Password = hash
+		res, err := db.Query("INSERT INTO users (name, email, password, created_at) VALUES ($1, $2, $3, $4)", user.Name, user.Email, user.Password, time.Now())
+		if err != nil {
+			return c.Status(500).JSON(fiber.Map{"status": "error", "message": "Couldn't create user", "data": err})
+		}
+
+		log.Println(res)
+
+		newUser := NewUser{
+			Name:  user.Name,
+			Email: user.Email,
+		}
+
+		return c.JSON(fiber.Map{"status": "success", "message": "Successfully created user", "data": newUser})
+	}
+}
+
+// Delete existing user
+func DeleteUser(db database.Database) fiber.Handler {
+	return func(c *fiber.Ctx) error {
+		id := c.Params("id")
+		res, err := db.Query("DELETE FROM users WHERE id = $1", id)
+		if err != nil {
+			return c.JSON(fiber.Map{"status": "error", "message": "Could not delete user from database", "data": err})
+		}
+
+		log.Println(res)
+
+		return c.JSON(fiber.Map{"status": "success", "message": "User successfully deleted", "data": id})
 	}
 }

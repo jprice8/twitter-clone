@@ -54,12 +54,6 @@ func main() {
 		log.Fatal(err)
 	}
 
-	var greeting string
-	err = db.QueryRow("select 'Hello, world!'").Scan(&greeting)
-	if err != nil {
-		log.Fatalf("QueryRow failed: %v\n", err)
-	}
-
 	// app := fiber.New()
 
 	// app.Get("/", func(c *fiber.Ctx) error {
