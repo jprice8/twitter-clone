@@ -24,7 +24,12 @@ services:
   web:
     build:
       context: ./web
-      dockerfile: build/web/Dockerfile
+      dockerfile: Dockerfile
+    volumes:
+      - ./web/:/web/
+    ports:
+      - 3000:3000
+    container_name: twitter-web
 
   db:
     image: postgres:13-alpine
